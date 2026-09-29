@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin Dashboard – College ERP" />
+  <title>Admin Dashboard – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Administrator Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('admin_students') }}"><span class="nav-icon">👨‍🎓</span> Students</a>
+      <a href="{{ url_for('admin_staff') }}"><span class="nav-icon">👩‍🏫</span> Staff</a>
+      <a href="{{ url_for('admin_courses') }}"><span class="nav-icon">📚</span> Courses</a>
+      <a href="{{ url_for('admin_reports') }}"><span class="nav-icon">📋</span> Reports</a>
+      <a href="{{ url_for('admin_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ session.name }}. Here is an overview of the college.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👨‍🎓</div>
+          <div class="stat-label">Total Students</div>
+          <div class="stat-value">{{ total_students }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👩‍🏫</div>
+          <div class="stat-label">Total Staff</div>
+          <div class="stat-value">{{ total_staff }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-label">Total Courses</div>
+          <div class="stat-value">{{ total_courses }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-label">Today's Attendance</div>
+          <div class="stat-value">
+            {% if attendance_pct is not none %}{{ attendance_pct }}%{% else %}—{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Quick Actions</h2>
+        </div>
+        <div class="card-body">
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ url_for('admin_student_add') }}" class="btn btn-primary">➕ Add Student</a>
+            <a href="{{ url_for('admin_staff_add') }}" class="btn btn-success">➕ Add Staff</a>
+            <a href="{{ url_for('admin_course_add') }}" class="btn btn-outline">➕ Add Course</a>
+            <a href="{{ url_for('admin_announcements') }}" class="btn btn-secondary">📢 Announcements</a>
+            <a href="{{ url_for('admin_reports') }}" class="btn btn-secondary">📋 View Reports</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) {
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+</script>
+</body>
+</html>

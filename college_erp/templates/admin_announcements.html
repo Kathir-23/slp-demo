@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Announcements – College ERP Admin" />
+  <title>Announcements – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Administrator Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('admin_students') }}"><span class="nav-icon">👨‍🎓</span> Students</a>
+      <a href="{{ url_for('admin_staff') }}"><span class="nav-icon">👩‍🏫</span> Staff</a>
+      <a href="{{ url_for('admin_courses') }}"><span class="nav-icon">📚</span> Courses</a>
+      <a href="{{ url_for('admin_reports') }}"><span class="nav-icon">📋</span> Reports</a>
+      <a href="{{ url_for('admin_announcements') }}" class="active"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Announcements</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Announcements</h1>
+        <p>Post and manage college-wide announcements.</p>
+      </div>
+
+      <!-- Post Announcement Form -->
+      <div class="card mb-2">
+        <div class="card-header">
+          <h2>📢 Post New Announcement</h2>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            <div class="form-group">
+              <label class="form-label" for="title">Title</label>
+              <input class="form-control" type="text" id="title" name="title"
+                     required placeholder="Announcement title" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="message">Message</label>
+              <textarea class="form-control" id="message" name="message"
+                        required placeholder="Write your announcement here..."></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">📤 Post Announcement</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Existing Announcements -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Recent Announcements</h2>
+          <span class="badge badge-gray">{{ announcements|length }}</span>
+        </div>
+        <div class="card-body">
+          {% if announcements %}
+          <div class="announcement-list">
+            {% for ann in announcements %}
+            <div class="announcement-card">
+              <div class="ann-title">{{ ann.title }}</div>
+              <div class="ann-body">{{ ann.message }}</div>
+              <div class="ann-meta">
+                <span>📅 {{ ann.date }}</span>
+                <span>👤 {{ ann.posted_by }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📢</div>
+            <p>No announcements yet. Post the first one above.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

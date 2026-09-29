@@ -1,0 +1,40 @@
+[
+    {
+        "id": 1,
+        "name": "Data Structures",
+        "code": "CS201",
+        "department": "Computer Science",
+        "staff_id": 1,
+        "student_ids": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Database Systems",
+        "code": "CS202",
+        "department": "Computer Science",
+        "staff_id": 2,
+        "student_ids": [
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Web Technologies",
+        "code": "CS203",
+        "department": "Computer Science",
+        "staff_id": 2,
+        "student_ids": [
+            3,
+            4,
+            5
+        ]
+    }
+]

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Course Roster – College ERP Staff" />
+  <title>Roster – {{ course.name }} – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Staff Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('staff_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('staff_attendance', course_id=course.id) }}"><span class="nav-icon">📅</span> Attendance</a>
+      <a href="{{ url_for('staff_grades', course_id=course.id) }}"><span class="nav-icon">📝</span> Grades</a>
+      <a href="{{ url_for('staff_roster', course_id=course.id) }}" class="active"><span class="nav-icon">📋</span> Roster</a>
+      <a href="{{ url_for('staff_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Class Roster</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Class Roster – {{ course.name }}</h1>
+        <p><span class="badge badge-blue">{{ course.code }}</span> &nbsp; {{ course.department }}</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Enrolled Students</h2>
+          <span class="badge badge-green">{{ enrolled|length }} students</span>
+        </div>
+        <div class="table-wrapper">
+          {% if enrolled %}
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Year</th>
+                <th>Email</th>
+                <th>Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in enrolled %}
+              <tr>
+                <td class="text-muted">{{ loop.index }}</td>
+                <td><span class="badge badge-blue">{{ s.roll_no }}</span></td>
+                <td><strong>{{ s.name }}</strong></td>
+                <td>{{ s.department }}</td>
+                <td>Year {{ s.year }}</td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.phone }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">👨‍🎓</div>
+            <p>No students enrolled in this course yet.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

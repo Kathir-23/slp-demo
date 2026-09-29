@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="College ERP System – Login to manage students, staff, courses, and more." />
+  <title>Login – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">🎓</div>
+      <h1>College ERP</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/">
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input class="form-control" type="text" id="username" name="username"
+               placeholder="Enter username" required autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password"
+               placeholder="Enter password" required autocomplete="current-password" />
+      </div>
+      <button class="btn btn-primary" type="submit">Sign In</button>
+    </form>
+
+    <div class="login-demo">
+      <strong>🔑 Demo Credentials</strong>
+      <div class="cred-row"><span><strong>Admin:</strong></span><span>admin / admin123</span></div>
+      <div class="cred-row"><span><strong>Staff:</strong></span><span>staff1 / staff123</span></div>
+      <div class="cred-row"><span><strong>Student:</strong></span><span>student1 / student123</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

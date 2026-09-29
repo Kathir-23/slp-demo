@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "roll_no": "CS001",
+        "name": "John Doe",
+        "department": "Computer Science",
+        "year": 2,
+        "email": "john.doe@student.edu",
+        "phone": "9876543210"
+    },
+    {
+        "id": 2,
+        "roll_no": "CS002",
+        "name": "Jane Smith",
+        "department": "Computer Science",
+        "year": 2,
+        "email": "jane.smith@student.edu",
+        "phone": "9876543211"
+    },
+    {
+        "id": 3,
+        "roll_no": "CS003",
+        "name": "Arun Kumar",
+        "department": "Computer Science",
+        "year": 3,
+        "email": "arun.kumar@student.edu",
+        "phone": "9876543212"
+    },
+    {
+        "id": 4,
+        "roll_no": "CS004",
+        "name": "Priya Nair",
+        "department": "Computer Science",
+        "year": 3,
+        "email": "priya.nair@student.edu",
+        "phone": "9876543213"
+    },
+    {
+        "id": 5,
+        "roll_no": "CS005",
+        "name": "Mohammed Ali",
+        "department": "Computer Science",
+        "year": 2,
+        "email": "mohammed.ali@student.edu",
+        "phone": "9876543214"
+    }
+]

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Student Dashboard – College ERP" />
+  <title>Student Dashboard – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Student Portal</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('student_dashboard') }}" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('student_grades') }}"><span class="nav-icon">📝</span> My Grades</a>
+      <a href="{{ url_for('student_attendance') }}"><span class="nav-icon">📅</span> My Attendance</a>
+      <a href="{{ url_for('student_courses') }}"><span class="nav-icon">📚</span> My Courses</a>
+      <a href="{{ url_for('student_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Student Dashboard</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Welcome, {{ student.name }}</h1>
+        <p>Here is your academic overview.</p>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-label">Enrolled Courses</div>
+          <div class="stat-value">{{ num_courses }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-label">Overall Attendance</div>
+          <div class="stat-value">
+            {% if att_pct is not none %}{{ att_pct }}%{% else %}—{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="card">
+        <div class="card-header"><h2>👤 My Profile</h2></div>
+        <div class="card-body">
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label">Roll Number:</span>
+              <span><strong>{{ student.roll_no }}</strong></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Full Name:</span>
+              <span>{{ student.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Department:</span>
+              <span>{{ student.department }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Year:</span>
+              <span>Year {{ student.year }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span>{{ student.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Phone:</span>
+              <span>{{ student.phone }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="card" style="margin-top: 18px;">
+        <div class="card-header"><h2>Quick Links</h2></div>
+        <div class="card-body">
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ url_for('student_grades') }}" class="btn btn-primary">📝 View Grades</a>
+            <a href="{{ url_for('student_attendance') }}" class="btn btn-success">📅 View Attendance</a>
+            <a href="{{ url_for('student_courses') }}" class="btn btn-outline">📚 My Courses</a>
+            <a href="{{ url_for('student_announcements') }}" class="btn btn-secondary">📢 Announcements</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ action }} Course – College ERP Admin" />
+  <title>{{ action }} Course – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Administrator Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('admin_students') }}"><span class="nav-icon">👨‍🎓</span> Students</a>
+      <a href="{{ url_for('admin_staff') }}"><span class="nav-icon">👩‍🏫</span> Staff</a>
+      <a href="{{ url_for('admin_courses') }}" class="active"><span class="nav-icon">📚</span> Courses</a>
+      <a href="{{ url_for('admin_reports') }}"><span class="nav-icon">📋</span> Reports</a>
+      <a href="{{ url_for('admin_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">{{ action }} Course</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>{{ action }} Course</h1>
+        <p>Fill in the course details, assign a staff member, and enrol students.</p>
+      </div>
+
+      <div class="card" style="max-width: 800px;">
+        <div class="card-body">
+          <form method="POST">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="name">Course Name</label>
+                <input class="form-control" type="text" id="name" name="name"
+                       value="{{ course.name if course else '' }}" required placeholder="e.g. Data Structures" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="code">Course Code</label>
+                <input class="form-control" type="text" id="code" name="code"
+                       value="{{ course.code if course else '' }}" required placeholder="e.g. CS201" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="department">Department</label>
+              <input class="form-control" type="text" id="department" name="department"
+                     value="{{ course.department if course else '' }}" required placeholder="e.g. Computer Science" />
+            </div>
+
+            {% if action == 'Edit' %}
+            <div class="form-group">
+              <label class="form-label" for="staff_id">Assign Staff</label>
+              <select class="form-control" id="staff_id" name="staff_id">
+                <option value="">-- Unassigned --</option>
+                {% for s in staff_list %}
+                  <option value="{{ s.id }}" {% if course and course.staff_id == s.id %}selected{% endif %}>
+                    {{ s.name }} ({{ s.department }})
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Enrolled Students</label>
+              <div class="checkbox-list">
+                {% for s in students %}
+                <label class="checkbox-item">
+                  <input type="checkbox" name="student_ids" value="{{ s.id }}"
+                         {% if course and s.id in course.student_ids %}checked{% endif %} />
+                  <span class="checkbox-label">{{ s.roll_no }} – {{ s.name }}</span>
+                </label>
+                {% endfor %}
+              </div>
+              {% if not students %}
+              <p class="text-muted text-small mt-1">No students available. Add students first.</p>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">
+                {% if action == 'Add' %}➕ Add Course{% else %}💾 Save Changes{% endif %}
+              </button>
+              <a href="{{ url_for('admin_courses') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

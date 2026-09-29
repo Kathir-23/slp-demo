@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Staff Dashboard – College ERP" />
+  <title>Staff Dashboard – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Staff Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('staff_dashboard') }}" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+      {% if courses %}
+        {% for c in courses %}
+          <a href="{{ url_for('staff_attendance', course_id=c.id) }}"><span class="nav-icon">📅</span> Attendance – {{ c.code }}</a>
+          <a href="{{ url_for('staff_grades', course_id=c.id) }}"><span class="nav-icon">📝</span> Grades – {{ c.code }}</a>
+          <a href="{{ url_for('staff_roster', course_id=c.id) }}"><span class="nav-icon">📋</span> Roster – {{ c.code }}</a>
+        {% endfor %}
+      {% endif %}
+      <a href="{{ url_for('staff_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Staff Dashboard</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Welcome, {% if staff %}{{ staff.name }}{% else %}{{ session.name }}{% endif %}</h1>
+        <p>Here is an overview of your courses and assignments.</p>
+      </div>
+
+      <!-- Profile Card -->
+      {% if staff %}
+      <div class="card mb-2">
+        <div class="card-header"><h2>👤 My Profile</h2></div>
+        <div class="card-body">
+          <div class="info-row">
+            <div class="info-item"><span class="info-label">Name:</span> <span>{{ staff.name }}</span></div>
+            <div class="info-item"><span class="info-label">Department:</span> <span>{{ staff.department }}</span></div>
+            <div class="info-item"><span class="info-label">Email:</span> <span>{{ staff.email }}</span></div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Courses -->
+      <div class="page-header" style="margin-top: 16px;">
+        <h2 style="font-size: 1.1rem; font-weight: 700;">📚 My Courses ({{ courses|length }})</h2>
+      </div>
+
+      {% if courses %}
+      <div class="course-grid">
+        {% for c in courses %}
+        <div class="course-card">
+          <div class="course-code">{{ c.code }}</div>
+          <div class="course-name">{{ c.name }}</div>
+          <div class="course-meta">
+            <span>🏢 {{ c.department }}</span>
+            <span>👨‍🎓 {{ c.student_ids|length }} students enrolled</span>
+          </div>
+          <div class="course-actions">
+            <a href="{{ url_for('staff_attendance', course_id=c.id) }}" class="btn btn-primary btn-sm">📅 Attendance</a>
+            <a href="{{ url_for('staff_grades', course_id=c.id) }}" class="btn btn-success btn-sm">📝 Grades</a>
+            <a href="{{ url_for('staff_roster', course_id=c.id) }}" class="btn btn-secondary btn-sm">📋 Roster</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">📚</div>
+          <p>No courses assigned to you yet. Please contact the administrator.</p>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

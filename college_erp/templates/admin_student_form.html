@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{{ action }} Student – College ERP Admin" />
+  <title>{{ action }} Student – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Administrator Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('admin_students') }}" class="active"><span class="nav-icon">👨‍🎓</span> Students</a>
+      <a href="{{ url_for('admin_staff') }}"><span class="nav-icon">👩‍🏫</span> Staff</a>
+      <a href="{{ url_for('admin_courses') }}"><span class="nav-icon">📚</span> Courses</a>
+      <a href="{{ url_for('admin_reports') }}"><span class="nav-icon">📋</span> Reports</a>
+      <a href="{{ url_for('admin_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">{{ action }} Student</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>{{ action }} Student</h1>
+        <p>Fill in the student details below.</p>
+      </div>
+
+      <div class="card" style="max-width: 700px;">
+        <div class="card-body">
+          <form method="POST">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="roll_no">Roll Number</label>
+                <input class="form-control" type="text" id="roll_no" name="roll_no"
+                       value="{{ student.roll_no if student else '' }}" required placeholder="e.g. CS001" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="name">Full Name</label>
+                <input class="form-control" type="text" id="name" name="name"
+                       value="{{ student.name if student else '' }}" required placeholder="Full name" />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="department">Department</label>
+                <input class="form-control" type="text" id="department" name="department"
+                       value="{{ student.department if student else '' }}" required placeholder="e.g. Computer Science" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="year">Year</label>
+                <select class="form-control" id="year" name="year" required>
+                  {% for y in [1, 2, 3, 4] %}
+                    <option value="{{ y }}" {% if student and student.year == y %}selected{% endif %}>Year {{ y }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" name="email"
+                       value="{{ student.email if student else '' }}" required placeholder="student@example.com" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone</label>
+                <input class="form-control" type="text" id="phone" name="phone"
+                       value="{{ student.phone if student else '' }}" required placeholder="10-digit number" />
+              </div>
+            </div>
+
+            <div class="sidebar-divider" style="margin: 20px 0;"></div>
+            <p class="text-muted text-small mb-2"><strong>Login Account</strong></p>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" id="username" name="username"
+                       value="{{ linked_user.username if linked_user else '' }}"
+                       {% if action == 'Add' %}required{% endif %}
+                       placeholder="Login username" {% if action == 'Edit' %}readonly{% endif %} />
+                {% if action == 'Edit' %}<div class="form-hint">Username cannot be changed after creation.</div>{% endif %}
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password"
+                       {% if action == 'Add' %}required{% endif %}
+                       placeholder="{{ 'Set password' if action == 'Add' else 'Leave blank to keep current' }}" />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">
+                {% if action == 'Add' %}➕ Add Student{% else %}💾 Save Changes{% endif %}
+              </button>
+              <a href="{{ url_for('admin_students') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

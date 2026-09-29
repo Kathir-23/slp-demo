@@ -1,0 +1,66 @@
+[
+    {
+        "id": 1,
+        "username": "admin",
+        "password_hash": "scrypt:32768:8:1$5MH4sxuwHFU4EIf3$9d9ad467aa740f2690ebde4d96c8d1b339a91b9baf577be4a3aac44275e0f38313052ca5f900cb0317b17abfca2f57ff3491df497bb47f70f5fbf3c8fa400a29",
+        "role": "admin",
+        "name": "Administrator",
+        "linked_id": null
+    },
+    {
+        "id": 2,
+        "username": "staff1",
+        "password_hash": "scrypt:32768:8:1$qOpIVKdGW4i5S1Tx$4fed54c8d897f0c0f7142a565b2a6c630d17dd9819e6bc9928779ccbd71ec81ae80dc33246d7538a6f33fb7c9217376cc75a53f25c88181c33e2f80c1a31b191",
+        "role": "staff",
+        "name": "Dr. Robert Smith",
+        "linked_id": 1
+    },
+    {
+        "id": 3,
+        "username": "staff2",
+        "password_hash": "scrypt:32768:8:1$Jgw6VX5hcz0um38u$08c0af3d39dba6f4dfc6cbe616bd98a76786dad6b9717e7c08bc64ca017b68d3cda4d5f6337f7bcf336fb69b7a121ed1382b3a4febccb863906ecab36c503ce2",
+        "role": "staff",
+        "name": "Prof. Ananya Iyer",
+        "linked_id": 2
+    },
+    {
+        "id": 4,
+        "username": "student1",
+        "password_hash": "scrypt:32768:8:1$I6gkWRpvUrcfoDh8$a7a658d79caa1c4a6c2e183e697e52fabc3480fb610cfe763ae9eade39f8cb6fac128fc0e195f34464bec6eff9f8250773cd55b0b085763585c95ecd410511e9",
+        "role": "student",
+        "name": "John Doe",
+        "linked_id": 1
+    },
+    {
+        "id": 5,
+        "username": "student2",
+        "password_hash": "scrypt:32768:8:1$Bfb6LIehnrMVVaTl$bef1f3fd4ab888a237deb9525fa8be3f664db540f67adae54bfc51e9b1bee659daaf7a1498be515ea0d15797955ba1aed7ee544d92d425adfd704908eaa0c4fd",
+        "role": "student",
+        "name": "Jane Smith",
+        "linked_id": 2
+    },
+    {
+        "id": 6,
+        "username": "student3",
+        "password_hash": "scrypt:32768:8:1$yvIgIiZDYIVoBETH$a6ab4cac46892ed1bb6cb86ec317dcb17f4db3fa066a94a97be588adfad0b587320d2c50a1c11e66e7a1140b265a9f08a7c3cbd23a90d09dac5db3d1cd136398",
+        "role": "student",
+        "name": "Arun Kumar",
+        "linked_id": 3
+    },
+    {
+        "id": 7,
+        "username": "student4",
+        "password_hash": "scrypt:32768:8:1$5MVb5Az33y7rMJ2K$50e1684c773806dba097f50178d0b5876c186510e86c28eba5ba6f09c24597562d791fc2a23bd2b7428bfb4c2208857f4a07e56b6819a4a6efee070eae13ef78",
+        "role": "student",
+        "name": "Priya Nair",
+        "linked_id": 4
+    },
+    {
+        "id": 8,
+        "username": "student5",
+        "password_hash": "scrypt:32768:8:1$81RRTh1v5XxeiXIl$f8f51c13747a89237881b8506fcc3c5342b62e02e5499275830b8d2c286189f7fb704a7c45b69548bd6121019c9eb16f51fbfd98ba57f18ee48cc0da1d122708",
+        "role": "student",
+        "name": "Mohammed Ali",
+        "linked_id": 5
+    }
+]

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Enter Grades – College ERP Staff" />
+  <title>Grades – {{ course.name }} – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Staff Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('staff_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('staff_attendance', course_id=course.id) }}"><span class="nav-icon">📅</span> Attendance</a>
+      <a href="{{ url_for('staff_grades', course_id=course.id) }}" class="active"><span class="nav-icon">📝</span> Grades</a>
+      <a href="{{ url_for('staff_roster', course_id=course.id) }}"><span class="nav-icon">📋</span> Roster</a>
+      <a href="{{ url_for('staff_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Enter Grades</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Grades – {{ course.name }}</h1>
+        <p><span class="badge badge-blue">{{ course.code }}</span> &nbsp; {{ course.department }}</p>
+      </div>
+
+      <!-- Exam selector -->
+      <form method="GET" action="{{ url_for('staff_grades', course_id=course.id) }}" style="margin-bottom: 20px;">
+        <div class="d-flex gap-2 align-center flex-wrap">
+          <label class="form-label" style="margin-bottom: 0;">Select Exam:</label>
+          {% for exam in exam_choices %}
+          <label class="radio-item">
+            <input type="radio" name="exam" value="{{ exam }}"
+                   {% if exam == selected_exam %}checked{% endif %}
+                   onchange="this.form.submit()" />
+            {{ exam }}
+          </label>
+          {% endfor %}
+        </div>
+      </form>
+
+      {% if enrolled %}
+      <div class="card">
+        <div class="card-header">
+          <h2>{{ selected_exam }} – Score Entry</h2>
+          <span class="badge badge-gray">{{ enrolled|length }} students</span>
+        </div>
+        <form method="POST" action="{{ url_for('staff_grades', course_id=course.id) }}?exam={{ selected_exam }}">
+          <input type="hidden" name="exam" value="{{ selected_exam }}" />
+          <div>
+            {% for s in enrolled %}
+            <div class="grade-entry-row">
+              <span class="grade-entry-name">
+                <strong>{{ s.roll_no }}</strong> – {{ s.name }}
+              </span>
+              <input class="grade-entry-input" type="number" name="score_{{ s.id }}"
+                     min="0" max="100" placeholder="Score"
+                     value="{{ existing_grades[s.id].score if s.id in existing_grades else '' }}" />
+            </div>
+            {% endfor %}
+          </div>
+          <div style="padding: 14px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 16px;">
+            <label class="form-label" style="margin: 0;">Max Score:</label>
+            <input class="grade-entry-input" type="number" name="max_score"
+                   min="1" value="100" />
+            <button class="btn btn-primary" type="submit">💾 Save Grades</button>
+          </div>
+        </form>
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">👨‍🎓</div>
+          <p>No students enrolled in this course yet.</p>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

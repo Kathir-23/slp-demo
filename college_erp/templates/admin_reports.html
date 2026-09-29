@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Reports – College ERP Admin" />
+  <title>Reports – College ERP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">🎓 College ERP</div>
+      <div class="brand-sub">Administrator Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="{{ url_for('admin_students') }}"><span class="nav-icon">👨‍🎓</span> Students</a>
+      <a href="{{ url_for('admin_staff') }}"><span class="nav-icon">👩‍🏫</span> Staff</a>
+      <a href="{{ url_for('admin_courses') }}"><span class="nav-icon">📚</span> Courses</a>
+      <a href="{{ url_for('admin_reports') }}" class="active"><span class="nav-icon">📋</span> Reports</a>
+      <a href="{{ url_for('admin_announcements') }}"><span class="nav-icon">📢</span> Announcements</a>
+      <div class="sidebar-divider"></div>
+      <a href="{{ url_for('logout') }}"><span class="nav-icon">🚪</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="d-flex align-center gap-2">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <span class="topbar-title">Reports</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-info">
+          <div class="user-name">{{ session.name }}</div>
+          <div class="user-role">{{ session.role }}</div>
+        </div>
+        <div class="avatar">{{ session.name[0].upper() }}</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="page-header">
+        <h1>Reports</h1>
+        <p>Filter attendance and grade data by department or course.</p>
+      </div>
+
+      <!-- Filters -->
+      <form method="GET" action="{{ url_for('admin_reports') }}">
+        <div class="filter-bar">
+          <div class="form-group">
+            <label class="form-label" for="department">Department</label>
+            <select class="form-control" id="department" name="department">
+              <option value="">All Departments</option>
+              {% for d in departments %}
+                <option value="{{ d }}" {% if dept_filter == d %}selected{% endif %}>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="course_id">Course</label>
+            <select class="form-control" id="course_id" name="course_id">
+              <option value="">All Courses</option>
+              {% for c in all_courses %}
+                <option value="{{ c.id }}" {% if course_filter == c.id|string %}selected{% endif %}>
+                  {{ c.code }} – {{ c.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group" style="align-self: flex-end;">
+            <button class="btn btn-primary" type="submit">🔍 Filter</button>
+            <a href="{{ url_for('admin_reports') }}" class="btn btn-secondary">Reset</a>
+          </div>
+        </div>
+      </form>
+
+      <!-- Attendance Report -->
+      <div class="card mb-2">
+        <div class="card-header">
+          <h2>📅 Attendance Report</h2>
+          <span class="badge badge-gray">{{ att_report|length }} records</span>
+        </div>
+        <div class="table-wrapper">
+          {% if att_report %}
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Roll No</th>
+                <th>Department</th>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in att_report %}
+              <tr>
+                <td>{{ r.student }}</td>
+                <td><span class="badge badge-blue">{{ r.roll_no }}</span></td>
+                <td>{{ r.department }}</td>
+                <td>{{ r.course }}</td>
+                <td>{{ r.date }}</td>
+                <td>
+                  {% if r.status == 'present' %}
+                    <span class="badge badge-green">Present</span>
+                  {% else %}
+                    <span class="badge badge-red">Absent</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p>No attendance records match the selected filters.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Grade Report -->
+      <div class="card">
+        <div class="card-header">
+          <h2>📝 Grade Report</h2>
+          <span class="badge badge-gray">{{ grade_report|length }} records</span>
+        </div>
+        <div class="table-wrapper">
+          {% if grade_report %}
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Roll No</th>
+                <th>Course</th>
+                <th>Exam</th>
+                <th>Score</th>
+                <th>Max Score</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for g in grade_report %}
+              <tr>
+                <td>{{ g.student }}</td>
+                <td><span class="badge badge-blue">{{ g.roll_no }}</span></td>
+                <td>{{ g.course }}</td>
+                <td>{{ g.exam }}</td>
+                <td>{{ g.score }}</td>
+                <td>{{ g.max_score }}</td>
+                <td>
+                  {% if g.percentage >= 75 %}
+                    <span class="badge badge-green">{{ g.percentage }}%</span>
+                  {% elif g.percentage >= 50 %}
+                    <span class="badge badge-yellow">{{ g.percentage }}%</span>
+                  {% else %}
+                    <span class="badge badge-red">{{ g.percentage }}%</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <p>No grade records match the selected filters.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+</script>
+</body>
+</html>

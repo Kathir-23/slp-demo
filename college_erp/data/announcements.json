@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "title": "Semester Examination Schedule",
+        "message": "The semester examinations will begin from October 15, 2026. Kindly check the hall tickets issued by the exam cell.",
+        "date": "2026-09-20",
+        "posted_by": "Administrator"
+    },
+    {
+        "id": 2,
+        "title": "College Holiday – Gandhi Jayanti",
+        "message": "The college will remain closed on October 2, 2026 on account of Gandhi Jayanti. Regular classes resume on October 3.",
+        "date": "2026-09-22",
+        "posted_by": "Administrator"
+    },
+    {
+        "id": 3,
+        "title": "Internal Assessment Marks Submission",
+        "message": "All staff members are requested to submit Internal Assessment marks by September 30, 2026. Use the Staff portal to enter grades.",
+        "date": "2026-09-25",
+        "posted_by": "Administrator"
+    }
+]

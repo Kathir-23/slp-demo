@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "Dr. Robert Smith",
+        "department": "Computer Science",
+        "email": "robert.smith@college.edu",
+        "subjects": [
+            "Data Structures",
+            "Algorithms"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Prof. Ananya Iyer",
+        "department": "Computer Science",
+        "email": "ananya.iyer@college.edu",
+        "subjects": [
+            "Database Systems",
+            "Web Technologies"
+        ]
+    }
+]
